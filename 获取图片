@@ -1,0 +1,110 @@
+点击button开始联网获取网络图片
+xml中就一个button和ImageView就好
+以下是MainActivity代码
+、package wz.com.mydata;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.StrictMode;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class MainActivity extends AppCompatActivity {
+
+    ///声明控件
+    Button btn;
+    ImageView img;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        //实例化控件
+        btn=(Button) findViewById(R.id.button);
+        img=(ImageView) findViewById(R.id.imageView2);
+        //
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites()
+        .detectNetwork().penaltyLog().build());
+        //检查Activity内存泄漏情况
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
+        .detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+      
+                btn.setEnabled(false);
+                String strUrL="http://02.imgmini.eastday.com/mobile/20170921/20170921131928_3dc26336e514fc371786795faad91cf0_3_mwpm_03200403.jpg";
+                try{
+                    Bitmap bitmap=getBitmap(strUrL);
+                    img.setImageBitmap(bitmap);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+    }
+
+    public Bitmap getBitmap(String path) throws IOException{
+        try{
+            URL url=new URL(path);
+            HttpURLConnection  httpURLConnection=(HttpURLConnection) url.openConnection();
+            httpURLConnection.setConnectTimeout(5000);
+            httpURLConnection.setRequestMethod("GET");
+            if (httpURLConnection.getResponseCode()==200){
+                InputStream inputStream=httpURLConnection.getInputStream();
+                Bitmap bitmap= BitmapFactory.decodeStream(inputStream);
+                return  bitmap;
+                };
+        }catch(IOException e){
+
+            e.printStackTrace();
+        }
+        return null;
+    }
+}
+
+StrictMode这两句特重要（不知意义，正在认识，删了网络数据获取不了是真的)
+ StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites()
+        .detectNetwork().penaltyLog().build());
+        //检查Activity内存泄漏情况
+ StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
+        .detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
+        
+  
+
+ // android：enabled="false" 按钮变灰，不可点击
+   btn.setEnabled(false);
+   
+   
+ //不理解为什么点击事件中要放一个url参数----------
+ 连接网络需要url、HttpURLConnection、输入流inputStream
+ btn的点击事件中加入url参数，是调用下面的方法，运行获取图片信息
+ 
+// if (httpURLConnection.getResponseCode()==200){
+HTTP状态码(HTTP Status Code)
+    一些常见的状态码为：  200 (成功) 服务器已成功处理了请求。 通常，这表示服务器提供了请求的网页。
+    http://wenwen.sogou.com/z/q707909585.htm
+    
+BitmapFactory.decodeStream -----读取bitmap
+ http://blog.csdn.net/gdliweibing/article/details/43230349   
+ http://blog.csdn.net/pengpenggxp/article/details/8134815
+ 我个人觉得大概可能或许就是这样了
+ 
+ 
+          
+        img.setImageBitmap(bitmap);
+        
+        实在找不到了，我要学习了。。。太概是imageview生成Bitmap吧
+        
+   
+ 
