@@ -108,3 +108,13 @@ BitmapFactory.decodeStream -----读取bitmap
         
    
  
+ 如果不使用Button，直接显示图片也可以
+ 
+   try {
+            Bitmap bitmap = getBitmap(strUrL);
+            img.setImageBitmap(bitmap);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+^^^^^^^^^^^^^^^^^^^^
+打开软件直接获取图片
