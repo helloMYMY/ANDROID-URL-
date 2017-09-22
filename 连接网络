@@ -1,0 +1,19 @@
+沿用之前项目 获取图片
+
+ URL url=new URL(path);
+            HttpURLConnection  httpURLConnection=(HttpURLConnection) url.openConnection();
+            httpURLConnection.setConnectTimeout(5000);
+            httpURLConnection.setRequestMethod("GET");
+            if (httpURLConnection.getResponseCode()==200){
+                InputStream inputStream=httpURLConnection.getInputStream();
+
+                Bitmap bitmap= BitmapFactory.decodeStream(inputStream);
+                return  bitmap;
+                };
+        }catch(IOException e){
+
+            e.printStackTrace();
+        }
+        
+ 去写项目了。在项目中学习吧，困难就是333333       
+        
